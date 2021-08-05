@@ -61,5 +61,27 @@ Route::get('/callback', function (Request $request) {
         'code' => $request->code,
     ]);
 
+    /**
+     * For the smoothness of token exchange, we are storing token data
+     * in the user session and using it everytime when user try to connect
+     * to SSO server.
+     */
+    $request->session()->put($response->json());
+
+    // return $response->json();
+    return redirect('/authuser');
+});
+
+Route::get('/authuser', function (Request $request) {
+    /**
+     * For fetching data from any OAuth 2.0 server, we need to pass the access token
+     * in the headers as shown below.
+     */
+    $accessToken = $request->session()->get("access_token");
+    $response = Http::withHeaders([
+        'Accept' => 'application/json',
+        'Authorization' => 'Bearer ' . $accessToken,
+    ])->get('http://localhost:8000/api/user');
+
     return $response->json();
 });
