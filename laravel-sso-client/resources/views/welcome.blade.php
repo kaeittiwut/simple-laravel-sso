@@ -39,7 +39,7 @@
             <h1>Laravel Single Sing On OAuth 2.0 Client</h1>
             <h3>Running at port 8080</h3>
 
-            <a href="/login">Login with OAuth 2.0</a>
+            <a href="{{ route('oauth.login') }}">Login with OAuth 2.0</a>
         </div>
     </div>
 </body>
