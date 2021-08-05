@@ -34,7 +34,7 @@ Route::get('/login', function (Request $request) {
         'client_id' => '94110e0c-6400-42d8-b4a9-d6155f04cf1f',
         'redirect_uri' => 'http://localhost:8080/callback',
         'response_type' => 'code',
-        'scope' => '',
+        'scope' => 'view-user',
         'state' => $state,
     ]);
 

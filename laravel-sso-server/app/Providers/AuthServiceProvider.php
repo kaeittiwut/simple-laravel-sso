@@ -33,5 +33,10 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addDays(1));
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
         Passport::personalAccessTokensExpireIn(Carbon::now()->addMonth(6));
+
+        /* Defining Scopes */
+        Passport::tokensCan([
+            'view-user' => 'เข้าถึงข้อมูลผู้ใช้งาน',
+        ]);
     }
 }
