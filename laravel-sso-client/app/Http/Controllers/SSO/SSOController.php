@@ -23,14 +23,14 @@ class SSOController extends Controller
          * to get authorization code which will provide access tokens to us.
          */
         $query = http_build_query([
-            'client_id' => '94110e0c-6400-42d8-b4a9-d6155f04cf1f',
-            'redirect_uri' => 'http://localhost:8080/oauth/callback',
+            'client_id' => config('auth.client_id'),
+            'redirect_uri' => config('auth.callback'),
             'response_type' => 'code',
-            'scope' => 'view-user',
+            'scope' => config('auth.scopes'),
             'state' => $state,
         ]);
 
-        return redirect('http://localhost:8000/oauth/authorize?' . $query);
+        return redirect(config('auth.sso_host') . '/oauth/authorize?' . $query);
     }
 
     public function getCallback(Request $request)
@@ -46,11 +46,11 @@ class SSOController extends Controller
          * On the exchange of authorization code, client id and client secret the SSO server
          * provided us witht the access token and refresh token.
          */
-        $response = Http::asForm()->post('http://localhost:8000/oauth/token', [
+        $response = Http::asForm()->post(config('auth.sso_host') . '/oauth/token', [
             'grant_type' => 'authorization_code',
-            'client_id' => '94110e0c-6400-42d8-b4a9-d6155f04cf1f',
-            'client_secret' => 'hebZezN6xHoCXGu96PQIScjwOWvazQUjws0Mlp7H',
-            'redirect_uri' => 'http://localhost:8080/oauth/callback',
+            'client_id' => config('auth.client_id'),
+            'client_secret' => config('auth.client_secret'),
+            'redirect_uri' => config('auth.callback'),
             'code' => $request->code,
         ]);
 
@@ -75,7 +75,7 @@ class SSOController extends Controller
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $accessToken,
-        ])->get('http://localhost:8000/api/user');
+        ])->get(config('auth.sso_host') . '/api/user');
 
         $userArray = $response->json();
 
